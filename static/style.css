@@ -1,0 +1,118 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #111;
+    color: #fff;
+}
+
+.hero {
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.overlay {
+    background: rgba(0, 0, 0, 0.7);
+    height: 100%;
+    padding: 40px 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 24px;
+    color: #ff6600;
+    font-weight: bold;
+}
+
+.logo span {
+    color: #fff;
+}
+
+nav ul {
+    display: flex;
+    gap: 30px;
+    list-style: none;
+}
+
+nav ul li {
+    cursor: pointer;
+    color: #ddd;
+}
+
+.content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.left h1 {
+    font-size: 56px;
+    margin-bottom: 20px;
+}
+
+.left p {
+    color: #ccc;
+    margin-bottom: 30px;
+}
+
+.btn {
+    background: #ff6600;
+    color: white;
+    padding: 12px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.right {
+    text-align: center;
+}
+
+.play-btn {
+    display: inline-block;
+    font-size: 48px;
+    color: white;
+    background: #ff6600;
+    width: 70px;
+    height: 70px;
+    line-height: 70px;
+    border-radius: 50%;
+    text-align: center;
+    margin-bottom: 10px;
+    text-decoration: none;
+}
+
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.socials a {
+    margin-right: 20px;
+    color: #aaa;
+    text-decoration: none;
+}
+
+.carousel span {
+    margin: 0 5px;
+    color: #555;
+    font-weight: bold;
+}
+
+.carousel .active {
+    color: #ff6600;
+}
