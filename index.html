@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-dark: #0f0f0f;
+      --bg-light: #ffffff;
+      --text-dark: #fff;
+      --text-light: #000;
+      --accent-dark: #ffa31a;
+      --accent-light: #3ba5df;
+    }
+
+    body[data-theme="dark"] {
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    body[data-theme="light"] {
+      background-color: var(--bg-light);
+      color: var(--text-light);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Montserrat', sans-serif;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      transition: background 0.4s ease, color 0.4s ease;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2rem 4rem;
+      background-color: inherit;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+
+    nav .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--accent-dark);
+    }
+
+    body[data-theme="light"] nav .logo {
+      color: var(--accent-light);
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 2rem;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      font-weight: 300;
+      color: inherit;
+      transition: color 0.3s;
+    }
+
+    nav ul li a:hover {
+      color: var(--accent-dark);
+    }
+
+    body[data-theme="light"] nav ul li a:hover {
+      color: var(--accent-light);
+    }
+
+    .theme-toggle {
+      background: transparent;
+      border: 1px solid var(--accent-dark);
+      color: var(--accent-dark);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    body[data-theme="light"] .theme-toggle {
+      border-color: var(--accent-light);
+      color: var(--accent-light);
+    }
+
+    section {
+      padding: 4rem 4rem;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding-top: 6rem;
+      animation: fadeInUp 1s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero h1 {
+      font-size: 4rem;
+      font-weight: 700;
+    }
+
+    .hero h3 {
+      margin-top: 1rem;
+      font-size: 1.5rem;
+      font-weight: 300;
+      color: #aaa;
+    }
+
+    .about-section,
+    .projects-section,
+    .contact-section {
+      align-items: center;
+      text-align: center;
+    }
+
+    .about-section h2,
+    .projects-section h2,
+    .contact-section h2 {
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+      border-left: 4px solid var(--accent-dark);
+      padding-left: 1rem;
+    }
+
+    body[data-theme="light"] .about-section h2,
+    body[data-theme="light"] .projects-section h2,
+    body[data-theme="light"] .contact-section h2 {
+      border-left-color: var(--accent-light);
+    }
+
+    .about-section p,
+    .contact-section p {
+      max-width: 700px;
+      line-height: 1.6;
+      color: var(--accent-dark);
+    }
+
+    body[data-theme="light"] .about-section p,
+    body[data-theme="light"] .contact-section p {
+      color: var(--accent-light);
+    }
+
+    .experience-edu-cards {
+      margin-top: 3rem;
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .card {
+      background-color: #1f1f1f;
+      border-radius: 12px;
+      padding: 1.5rem;
+      width: 280px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease;
+      text-align: left;
+    }
+
+    body[data-theme="light"] .card {
+      background-color: #f0f0f0;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+    }
+
+    .card h3 {
+      color: var(--accent-dark);
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    body[data-theme="light"] .card h3 {
+      color: var(--accent-light);
+    }
+
+    .card p {
+      color: #ccc;
+      font-size: 0.9rem;
+    }
+
+    body[data-theme="light"] .card p {
+      color: #444;
+    }
+
+    .project-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .contact-links {
+      margin-top: 1rem;
+    }
+
+    .contact-links a {
+      margin-right: 1rem;
+      text-decoration: none;
+      font-weight: bold;
+      color: var(--accent-dark);
+      transition: opacity 0.3s;
+    }
+
+    body[data-theme="light"] .contact-links a {
+      color: var(--accent-light);
+    }
+
+    .contact-links a:hover {
+      opacity: 0.7;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.9rem;
+      color: #888;
+      background-color: #111;
+    }
+
+    body[data-theme="light"] footer {
+      background-color: #eee;
+      color: #666;
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .theme-toggle {
+        margin-top: 1rem;
+      }
+    }
+  </style>
+</head>
+
+<body data-theme="dark">
+  <nav>
+    <div class="logo">FAZIL</div>
+    <ul>
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="theme-toggle" onclick="toggleTheme()">🌗</button>
+  </nav>
+
+  <section id="home" class="hero">
+    <h1>Ciao, I'm Fazil</h1>
+    <h3>Web Developer | AI & Data Science Enthusiast</h3>
+  </section>
+
+  <section id="about" class="about-section">
+    <h2>About Me</h2>
+    <p>
+      I'm a developer and AI & Data Science student passionate about building sleek, responsive websites and solving real-world problems through machine learning. My work blends design with intelligence — creating experiences that look good and think smart.
+    </p>
+      <div class="experience-edu-cards">
+        <div class="card">
+          <h3>🎓 Education</h3>
+          <p><strong>B.Tech, AI & DS</strong><br>REVA University, Bengaluru<br>2023 - Present</p>
+        </div>
+        <div class="card">
+          <h3>🗣️ Languages</h3>
+          <p>English, Hindi, Japanese, German, Telugu, Kannada</p>
+        </div>
+        <div class="card">
+          <h3>💻 Tech Stack</h3>
+          <p>C, HTML, CSS, EJS (ES6), Python, MongoDB, PHP, SQL</p>
+        </div>
+    </div>
+
+  </section>
+
+  <section id="projects" class="projects-section">
+    <h2>Projects</h2>
+    <div class="project-cards">
+      <div class="card">
+        <h3>AI Assistant</h3>
+        <p>Personal AI assistant with OpenAI APIs for summarization, chat, and task handling.</p>
+      </div>
+      <div class="card">
+        <h3>Spam Mail Classifier</h3>
+        <p>Naive Bayes ML classifier to detect spam emails with 95%+ accuracy.</p>
+      </div>
+      <div class="card">
+        <h3>Portfolio Site</h3>
+        <p>Anime-inspired responsive portfolio with light/dark toggle — this very site!</p>
+      </div>
+      <div class="card">
+        <h3>Gym CRM System</h3>
+        <p>Full-stack Node.js + MySQL app to manage gym memberships and payments.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact-section">
+    <h2>Contact</h2>
+    <p>If you’d like to collaborate on development or AI projects, feel free to reach out or connect!</p>
+    <div class="contact-links">
+      <a href="https://www.linkedin.com/in/fazilimaad523" target="_blank">LinkedIn</a>
+      <a href="https://github.com/f4zill" target="_blank">GitHub</a>
+    </div>
+  </section>
+
+  <footer>
+    © 2025 Fazil. All rights reserved.
+  </footer>
+
+  <script>
+    function toggleTheme() {
+      const body = document.body;
+      const currentTheme = body.getAttribute('data-theme');
+      body.setAttribute('data-theme', currentTheme === 'light' ? 'dark' : 'light');
+    }
+  </script>
+</body>
+</html>
