@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -268,6 +269,38 @@
         margin-top: 1rem;
       }
     }
+    .project-details {
+  display: none;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: #ccc;
+  transition: all 0.3s ease;
+}
+
+body[data-theme="light"] .project-details {
+  color: #444;
+}
+
+.card button {
+  margin-top: 0.5rem;
+  background-color: transparent;
+  border: 1px solid var(--accent-dark);
+  color: var(--accent-dark);
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+body[data-theme="light"] .card button {
+  border-color: var(--accent-light);
+  color: var(--accent-light);
+}
+
+.card button:hover {
+  opacity: 0.8;
+}
+
   </style>
 </head>
 
@@ -314,20 +347,44 @@
     <h2>Projects</h2>
     <div class="project-cards">
       <div class="card">
-        <h3>AI Assistant</h3>
-        <p>Personal AI assistant with OpenAI APIs for summarization, chat, and task handling.</p>
-      </div>
-      <div class="card">
-        <h3>Spam Mail Classifier</h3>
-        <p>Naive Bayes ML classifier to detect spam emails with 95%+ accuracy.</p>
-      </div>
-      <div class="card">
-        <h3>Portfolio Site</h3>
-        <p>Anime-inspired responsive portfolio with light/dark toggle — this very site!</p>
+        <h3>Gym CRM System</h3>
+        <p>Full-stack app to manage gym members and payments.</p>
+        <button onclick="toggleDetails(this)">View More</button>
+        <div class="project-details">
+          <p>This Node.js + MySQL-based CRM helps gyms handle memberships, attendance, and billing. Includes admin panel and responsive UI.</p>
+          <p><strong>Tech:</strong> Node.js, Express, MySQL, EJS</p>
+          <a href="https://github.com/f4zill/gym-crm" target="_blank">🔗 GitHub</a>
+        </div>
       </div>
       <div class="card">
         <h3>Gym CRM System</h3>
-        <p>Full-stack Node.js + MySQL app to manage gym memberships and payments.</p>
+        <p>Full-stack app to manage gym members and payments.</p>
+        <button onclick="toggleDetails(this)">View More</button>
+        <div class="project-details">
+          <p>This Node.js + MySQL-based CRM helps gyms handle memberships, attendance, and billing. Includes admin panel and responsive UI.</p>
+          <p><strong>Tech:</strong> Node.js, Express, MySQL, EJS</p>
+          <a href="https://github.com/f4zill/gym-crm" target="_blank">🔗 GitHub</a>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Gym CRM System</h3>
+        <p>Full-stack app to manage gym members and payments.</p>
+        <button onclick="toggleDetails(this)">View More</button>
+        <div class="project-details">
+          <p>This Node.js + MySQL-based CRM helps gyms handle memberships, attendance, and billing. Includes admin panel and responsive UI.</p>
+          <p><strong>Tech:</strong> Node.js, Express, MySQL, EJS</p>
+          <a href="https://github.com/f4zill/gym-crm" target="_blank">🔗 GitHub</a>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Gym CRM System</h3>
+        <p>Full-stack app to manage gym members and payments.</p>
+        <button onclick="toggleDetails(this)">View More</button>
+        <div class="project-details">
+          <p>This Node.js + MySQL-based CRM helps gyms handle memberships, attendance, and billing. Includes admin panel and responsive UI.</p>
+          <p><strong>Tech:</strong> Node.js, Express, MySQL, EJS</p>
+          <a href="https://github.com/f4zill/gym-crm" target="_blank">🔗 GitHub</a>
+        </div>
       </div>
     </div>
   </section>
@@ -351,6 +408,12 @@
       const currentTheme = body.getAttribute('data-theme');
       body.setAttribute('data-theme', currentTheme === 'light' ? 'dark' : 'light');
     }
+      function toggleDetails(btn) {
+    const details = btn.nextElementSibling;
+    const isVisible = details.style.display === "block";
+    details.style.display = isVisible ? "none" : "block";
+    btn.textContent = isVisible ? "View More" : "View Less";
+  }
   </script>
 </body>
 </html>
