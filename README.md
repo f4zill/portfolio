@@ -1,4 +1,4 @@
-#  Anime-Inspired Developer & AI/DS Portfolio
+#  Web Developer & AI/DS Portfolio
 
 Welcome to my personal portfolio website — a bold fusion of elegant design and powerful tech. This site reflects my journey as a full-stack developer and AI/Data Science student, crafted with deep anime inspiration, responsive layouts, and dark/light modes.
 
