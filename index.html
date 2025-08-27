@@ -35,6 +35,18 @@
 
     body {
       transition: background 0.4s ease, color 0.4s ease;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Canvas background */
+    #bgCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      width: 100%;
+      height: 100%;
     }
 
     nav {
@@ -214,7 +226,7 @@
     }
 
     .project-cards {
-      display: grid;
+      display: inline-flex;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 2rem;
       margin-top: 2rem;
@@ -268,49 +280,51 @@
         margin-top: 1rem;
       }
     }
+
     .project-details {
-  display: none;
-  margin-top: 1rem;
-  font-size: 0.9rem;
-  color: #ccc;
-  transition: all 0.3s ease;
-}
+      display: none;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: #ccc;
+      transition: all 0.3s ease;
+    }
 
-body[data-theme="light"] .project-details {
-  color: #444;
-}
+    body[data-theme="light"] .project-details {
+      color: #444;
+    }
 
-.card button {
-  margin-top: 0.5rem;
-  background-color: transparent;
-  border: 1px solid var(--accent-dark);
-  color: var(--accent-dark);
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: 0.3s;
-}
+    .card button {
+      margin-top: 0.5rem;
+      background-color: transparent;
+      border: 1px solid var(--accent-dark);
+      color: var(--accent-dark);
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
 
-body[data-theme="light"] .card button {
-  border-color: var(--accent-light);
-  color: var(--accent-light);
-}
+    body[data-theme="light"] .card button {
+      border-color: var(--accent-light);
+      color: var(--accent-light);
+    }
 
-.card button:hover {
-  opacity: 0.8;
-}
-
+    .card button:hover {
+      opacity: 0.8;
+    }
   </style>
 </head>
 
 <body data-theme="dark">
+  <!-- Background canvas -->
+  <canvas id="bgCanvas"></canvas>
+
   <nav>
     <div class="logo">FAZIL</div>
     <ul>
       <li><a href="#home">Home</a></li>
       <li><a href="#about">About</a></li>
       <li><a href="#projects">Projects</a></li>
-      <li><a href="#certifications">certifications</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
     <button class="theme-toggle" onclick="toggleTheme()">🌗</button>
@@ -340,7 +354,6 @@ body[data-theme="light"] .card button {
           <p>C, HTML, CSS, EJS (ES6), Python, MongoDB, PHP, SQL</p>
         </div>
     </div>
-
   </section>
 
   <section id="projects" class="projects-section">
@@ -357,78 +370,33 @@ body[data-theme="light"] .card button {
         </div>
       </div>
       <div class="card">
-        <h3>Gym CRM System</h3>
-        <p>Full-stack app to manage gym members and payments.</p>
+        <h3>BeeByte — A Living Digital Notebook</h3>
+        <p>A minimal, hand-crafted blog hosted on GitHub Pages where I document curiosity in motion.</p>
         <button onclick="toggleDetails(this)">View More</button>
         <div class="project-details">
-          <p>This Node.js + MySQL-based CRM helps gyms handle memberships, attendance, and billing. Includes admin panel and responsive UI.</p>
-          <p><strong>Tech:</strong> Node.js, Express, MySQL, EJS</p>
-          <a href="https://github.com/f4zill/gym-crm" target="_blank">🔗 GitHub</a>
+          <p>I write byte-sized (and not-so-byte-sized) entries on tech, travel, language learning, personal growth, custom setups, and experiments that shape my journey</p>
+          <p><strong>Tech:</strong>HTML, CSS (custom, no frameworks)</p>
+          <a href="https://github.com/f4zill/blog" target="_blank">🔗 GitHub</a>
         </div>
       </div>
       <div class="card">
-        <h3>Gym CRM System</h3>
-        <p>Full-stack app to manage gym members and payments.</p>
+        <h3>❄️ Frostspire — A Themed Blog Universe</h3>
+        <p>"Facemash sparked the fire — Frostspire built the world.".</p>
         <button onclick="toggleDetails(this)">View More</button>
         <div class="project-details">
-          <p>This Node.js + MySQL-based CRM helps gyms handle memberships, attendance, and billing. Includes admin panel and responsive UI.</p>
-          <p><strong>Tech:</strong> Node.js, Express, MySQL, EJS</p>
-          <a href="https://github.com/f4zill/gym-crm" target="_blank">🔗 GitHub</a>
+          <p>Frostspire is a PHP + MySQL powered blog platform, crafted as both a creative experiment and a full-stack learning project.</p>
+          <p><strong>Tech:</strong> PHP, MySQL ,HTML,CSS ,XAMPP,Git </p>
+          <a href="https://github.com/f4zill/FROSTSPIRE" target="_blank">🔗 GitHub</a>
         </div>
       </div>
       <div class="card">
-        <h3>Gym CRM System</h3>
-        <p>Full-stack app to manage gym members and payments.</p>
+        <h3>Chest X-Ray Pneumonia Classification</h3>
+        <p>Deep Learning for Medical Image Analysis</p>
         <button onclick="toggleDetails(this)">View More</button>
         <div class="project-details">
-          <p>This Node.js + MySQL-based CRM helps gyms handle memberships, attendance, and billing. Includes admin panel and responsive UI.</p>
-          <p><strong>Tech:</strong> Node.js, Express, MySQL, EJS</p>
-          <a href="https://github.com/f4zill/gym-crm" target="_blank">🔗 GitHub</a>
-        </div>
-      </div>
-    </div>
-  </section>
-    <section id="certifications" class="projects-section">
-    <h2>Certifications</h2>
-    <div class="project-cards">
-      <div class="card">
-        <h3>[Delloite] Job simulation]</h3>
-        <p>Full-stack app to manage gym members and payments.</p>
-        <button onclick="toggleDetails(this)">View More</button>
-        <div class="project-details">
-          <p>This Node.js + MySQL-based CRM helps gyms handle memberships, attendance, and billing. Includes admin panel and responsive UI.</p>
-          <p><strong>Tech:</strong> Node.js, Express, MySQL, EJS</p>
-          <a href="https://github.com/f4zill/gym-crm" target="_blank">🔗 GitHub</a>
-        </div>
-      </div>
-      <div class="card">
-        <h3>Gym CRM System</h3>
-        <p>Full-stack app to manage gym members and payments.</p>
-        <button onclick="toggleDetails(this)">View More</button>
-        <div class="project-details">
-          <p>This Node.js + MySQL-based CRM helps gyms handle memberships, attendance, and billing. Includes admin panel and responsive UI.</p>
-          <p><strong>Tech:</strong> Node.js, Express, MySQL, EJS</p>
-          <a href="https://github.com/f4zill/gym-crm" target="_blank">🔗 GitHub</a>
-        </div>
-      </div>
-      <div class="card">
-        <h3>Gym CRM System</h3>
-        <p>Full-stack app to manage gym members and payments.</p>
-        <button onclick="toggleDetails(this)">View More</button>
-        <div class="project-details">
-          <p>This Node.js + MySQL-based CRM helps gyms handle memberships, attendance, and billing. Includes admin panel and responsive UI.</p>
-          <p><strong>Tech:</strong> Node.js, Express, MySQL, EJS</p>
-          <a href="https://github.com/f4zill/gym-crm" target="_blank">🔗 GitHub</a>
-        </div>
-      </div>
-      <div class="card">
-        <h3>Gym CRM System</h3>
-        <p>Full-stack app to manage gym members and payments.</p>
-        <button onclick="toggleDetails(this)">View More</button>
-        <div class="project-details">
-          <p>This Node.js + MySQL-based CRM helps gyms handle memberships, attendance, and billing. Includes admin panel and responsive UI.</p>
-          <p><strong>Tech:</strong> Node.js, Express, MySQL, EJS</p>
-          <a href="https://github.com/f4zill/gym-crm" target="_blank">🔗 GitHub</a>
+          <p>This project applies Convolutional Neural Networks (CNNs) and Transfer Learning to classify chest X-ray images into Normal or Pneumonia. It leverages modern deep learning techniques with explainability tools (Grad-CAM) to highlight decision regions in the images. The system is built to assist in early pneumonia detection, providing a step toward AI-powered medical diagnostics.</p>
+          <p><strong>Tech:</strong>TensorFlow / Keras,CNN, Transfer Learning,Flask web app for image upload & prediction</p>
+          <a href="https://github.com/f4zill/Xray" target="_blank">🔗 GitHub</a>
         </div>
       </div>
     </div>
@@ -453,12 +421,83 @@ body[data-theme="light"] .card button {
       const currentTheme = body.getAttribute('data-theme');
       body.setAttribute('data-theme', currentTheme === 'light' ? 'dark' : 'light');
     }
-      function toggleDetails(btn) {
-    const details = btn.nextElementSibling;
-    const isVisible = details.style.display === "block";
-    details.style.display = isVisible ? "none" : "block";
-    btn.textContent = isVisible ? "View More" : "View Less";
-  }
+
+    function toggleDetails(btn) {
+      const details = btn.nextElementSibling;
+      const isVisible = details.style.display === "block";
+      details.style.display = isVisible ? "none" : "block";
+      btn.textContent = isVisible ? "View More" : "View Less";
+    }
+
+    // Interactive particle background
+    const canvas = document.getElementById("bgCanvas");
+    const ctx = canvas.getContext("2d");
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.size = Math.random() * 3 + 1;
+        this.speedX = (Math.random() - 0.5) * 1;
+        this.speedY = (Math.random() - 0.5) * 1;
+      }
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.size > 0.2) this.size -= 0.02;
+      }
+      draw() {
+        ctx.fillStyle = "rgba(255, 163, 26, 0.8)";
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function handleParticles() {
+      for (let i = 0; i < particles.length; i++) {
+        particles[i].update();
+        particles[i].draw();
+        for (let j = i; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          if (distance < 100) {
+            ctx.beginPath();
+            ctx.strokeStyle = "rgba(255, 163, 26, 0.2)";
+            ctx.lineWidth = 0.5;
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+          }
+        }
+        if (particles[i].size <= 0.3) {
+          particles.splice(i, 1);
+          i--;
+        }
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      handleParticles();
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    window.addEventListener("mousemove", function (e) {
+      for (let i = 0; i < 3; i++) {
+        particles.push(new Particle(e.x, e.y));
+      }
+    });
   </script>
 </body>
 </html>
