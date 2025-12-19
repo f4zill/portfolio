@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>FAZIL.EXE / PROJECTS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #050505;
+      --fg: #eaeaea;
+      --muted: #666;
+      --accent: #ff9f1c;
+      --panel: rgba(255, 255, 255, 0.02);
+      --border: rgba(255, 255, 255, 0.08);
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --transition-speed: 0.8s;
+      --curve: cubic-bezier(0.8, 0, 0.2, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* Allowed body to scroll on mobile if content overflows */
+    body, html {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      width: 100vw;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden; 
+      perspective: 2000px;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .code {
+      width: 95%;
+      max-width: 1200px;
+      height: 85vh; /* Fixed height for desktop */
+      background: var(--panel);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 1rem;
+      padding: 2.5rem;
+      position: relative;
+      z-index: 2;
+      animation: sceneIn 1.2s var(--curve) forwards;
+      overflow: hidden;
+    }
+
+    @keyframes sceneIn {
+      from { opacity: 0; transform: scale(0.9) translateZ(-300px); }
+      to { opacity: 1; transform: scale(1) translateZ(0); }
+    }
+
+    /* --- SIDEBAR --- */
+    .sidebar {
+      border-right: 1px solid var(--border);
+      padding-right: 2rem;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .brand {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      letter-spacing: 0.3em;
+      font-weight: 700;
+      opacity: 0.8;
+      flex-shrink: 0;
+      margin-bottom: 2rem;
+    }
+
+    .stack-scroll {
+      flex-grow: 1;
+      overflow-y: auto;
+      padding-right: 10px;
+    }
+    
+    .stack-scroll::-webkit-scrollbar { width: 2px; }
+    .stack-scroll::-webkit-scrollbar-thumb { background: var(--border); }
+
+    .stack { margin-bottom: 2.5rem; }
+    .stack h4 {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+    }
+
+    .stack span {
+      display: block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      margin-bottom: 0.6rem;
+      color: #aaa;
+    }
+    .stack span::before { content: "// "; color: var(--accent); opacity: 0.5; }
+
+    .back-container {
+      padding-top: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .back {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      cursor: pointer;
+      letter-spacing: 0.1em;
+      transition: all 0.3s;
+      display: inline-block;
+      padding: 5px 0;
+    }
+
+    .back:hover { 
+      color: var(--accent); 
+      transform: translateX(-5px); 
+      text-shadow: 0 0 8px var(--accent);
+    }
+
+    /* --- CONTENT AREA --- */
+    .content {
+      padding-left: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .content h2 {
+      font-size: 3rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      margin-bottom: 2rem;
+      flex-shrink: 0;
+      background: linear-gradient(180deg, #fff 0%, #444 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .panel {
+      flex-grow: 1;
+      overflow-y: auto;
+      padding-right: 1rem;
+      padding-bottom: 2rem;
+    }
+
+    .panel::-webkit-scrollbar { width: 4px; }
+    .panel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .project-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.8rem;
+      transition: all 0.5s var(--curve);
+      cursor: pointer;
+      opacity: 0;
+      transform: translateZ(200px) translateY(40px);
+    }
+
+    .project-card.visible {
+      opacity: 1;
+      transform: translateZ(0) translateY(0);
+    }
+
+    .project-card:hover {
+      background: rgba(255,255,255,0.06);
+      border-color: var(--accent);
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 40px -15px rgba(0,0,0,0.5);
+    }
+
+    .project-card h3 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      margin-bottom: 0.8rem;
+      color: var(--accent);
+    }
+
+    .project-card p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .project-card code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: #fff;
+      background: rgba(0,0,0,0.3);
+      padding: 0.5rem 0.8rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+
+    /* --- RESPONSIVE DESIGN --- */
+    @media (max-width: 900px) {
+      body {
+        align-items: flex-start;
+        overflow-y: auto; /* Allow scrolling on small screens */
+        padding: 1rem 0;
+      }
+
+      .code {
+        grid-template-columns: 1fr; /* Stack sidebar and content */
+        height: auto; /* Let it expand */
+        padding: 1.5rem;
+        width: 92%;
+        overflow: visible;
+      }
+
+      .sidebar {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding-right: 0;
+        padding-bottom: 1.5rem;
+        margin-bottom: 1.5rem;
+        height: auto;
+      }
+
+      .stack-scroll {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        overflow: visible;
+      }
+
+      .stack { margin-bottom: 0; }
+
+      .content {
+        padding-left: 0;
+        height: auto;
+        overflow: visible;
+      }
+
+      .panel {
+        overflow: visible;
+        padding-right: 0;
+      }
+
+      .content h2 {
+        font-size: 2.2rem;
+      }
+    }
+
+    /* Exit Overlay */
+    #transition-overlay {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.6s var(--curve);
+    }
+
+    body.is-exiting #transition-overlay { opacity: 1; }
+    body.is-exiting .code { transform: scale(0.8) translateZ(-500px); opacity: 0; transition: all 0.8s var(--curve); }
+
+  </style>
+</head>
+
+<body>
+  <div id="transition-overlay"></div>
+
+  <div class="code">
+    <div class="sidebar">
+      <div class="brand">FAZIL.EXE / PRJ</div>
+
+      <div class="stack-scroll">
+        <div class="stack">
+          <h4>CORE STACK</h4>
+          <span>Python / Flask</span>
+          <span>Node.js / Express</span>
+        </div>
+
+        <div class="stack">
+          <h4>PRODUCTION</h4>
+          <span>Docker / Compose</span>
+          <span>Render Deployment</span>
+        </div>
+
+        <div class="stack">
+          <h4>AI / ML</h4>
+          <span>TensorFlow</span>
+          <span>MobileNetV2</span>
+        </div>
+      </div>
+
+      <div class="back-container">
+        <div class="back" onclick="goBack()">← RETURN TO RUNTIME</div>
+      </div>
+    </div>
+
+    <div class="content">
+      <h2>Engineering.</h2>
+      <div class="panel">
+        <div id="projects-container" class="projects-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const projects = [
+      { title: "Gym Management System", description: "500+ users, Flask + MongoDB, fully Dockerized for scalability.", tech: "Flask • MongoDB • Docker" },
+      { title: "Pneumonia Detection", description: "92.5% accuracy using MobileNetV2 architecture for X-ray analysis.", tech: "TensorFlow • Keras • AI" },
+      { title: "EcoFinds E-commerce", description: "Full-stack shopping platform with MySQL and containerized deployment.", tech: "Flask • MySQL • Docker" },
+      { title: "AI-powered Notes", description: "React + Node + REST APIs, featuring real-time synchronization.", tech: "React • Node.js • APIs" },
+      { title: "Task Management App", description: "High-performance dashboard built with React and Firebase.", tech: "React • Firebase" },
+      { title: "Weather Dashboard", description: "Real-time weather data visualization with Chart.js integration.", tech: "JS • API • Chart.js" },
+      { title: "Custom CMS Blog", description: "Secure blog platform with custom user authentication logic.", tech: "PHP • MySQL" },
+      { title: "Portfolio V1", description: "High-fidelity responsive design with complex CSS animations.", tech: "HTML • CSS • JS" }
+    ];
+
+    const container = document.getElementById("projects-container");
+
+    projects.forEach((proj, index) => {
+      const card = document.createElement("div");
+      card.classList.add("project-card");
+      card.innerHTML = `
+        <h3>${proj.title}</h3>
+        <p>${proj.description}</p>
+        <code>${proj.tech}</code>
+      `;
+      container.appendChild(card);
+
+      setTimeout(() => {
+        card.classList.add('visible');
+      }, 100 * index + 400); 
+    });
+
+    function goBack() {
+      document.body.classList.add("is-exiting");
+      setTimeout(() => {
+        window.location.href = "../index.html"; 
+      }, 750);
+    }
+  </script>
+</body>
+</html>

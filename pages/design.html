@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>FAZIL.EXE / DESIGN</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #050505;
+      --fg: #eaeaea;
+      --muted: #666;
+      --accent: #ff9f1c;
+      --panel: rgba(255, 255, 255, 0.02);
+      --border: rgba(255, 255, 255, 0.08);
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --transition-speed: 0.8s;
+      --curve: cubic-bezier(0.8, 0, 0.2, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body, html {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'Inter', sans-serif;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden; 
+      perspective: 2000px; /* Essential for the Tilt Effect */
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    /* --- PARALLAX CONTAINER --- */
+    .container {
+      width: 85%;
+      max-width: 1000px;
+      height: 70vh;
+      background: var(--panel);
+      backdrop-filter: blur(25px);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 4rem;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 4rem;
+      position: relative;
+      z-index: 2;
+      transform-style: preserve-3d;
+      transition: transform 0.1s ease-out; /* Smooth tilt return */
+      animation: sceneIn 1.2s var(--curve) forwards;
+    }
+
+    @keyframes sceneIn {
+      from { opacity: 0; transform: scale(0.9) translateZ(-300px); }
+      to { opacity: 1; transform: scale(1) translateZ(0); }
+    }
+
+    /* --- LEFT CONTENT --- */
+    .content h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.05em;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(180deg, #fff 0%, #444 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transform: translateZ(50px); /* 3D Pop */
+    }
+
+    .content p {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: var(--muted);
+      max-width: 400px;
+      transform: translateZ(30px);
+    }
+
+    /* --- RIGHT GRID --- */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      justify-content: center;
+      transform: translateZ(40px);
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: #aaa;
+      letter-spacing: 0.05em;
+      transition: all 0.4s var(--curve);
+      opacity: 0;
+      transform: translateX(20px);
+    }
+
+    .card.reveal {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .card:hover {
+      border-color: var(--accent);
+      color: var(--fg);
+      background: rgba(255, 159, 28, 0.05);
+      transform: scale(1.05) translateZ(20px);
+    }
+
+    /* --- RETURN BUTTON --- */
+    .back {
+      position: absolute;
+      bottom: 3rem;
+      left: 4rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      cursor: pointer;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      transition: 0.3s;
+      z-index: 10;
+    }
+
+    .back:hover { 
+      color: var(--accent); 
+      transform: translateX(-5px);
+    }
+
+    /* --- EXIT TRANSITION --- */
+    #transition-overlay {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.6s var(--curve);
+    }
+
+    body.is-exiting #transition-overlay { opacity: 1; }
+    body.is-exiting .container { transform: scale(0.8) translateZ(-500px); opacity: 0; transition: all 0.8s var(--curve); }
+
+  </style>
+</head>
+
+<body>
+
+  <div id="transition-overlay"></div>
+
+  <div class="container" id="parallax-target">
+    <div class="content">
+      <h1>Design is<br>restraint.</h1>
+      <p>I focus on balance, spacing, and intent. If something doesn’t serve meaning — it doesn’t exist.</p>
+    </div>
+
+    <div class="grid" id="card-grid">
+      <div class="card">Typography-first layouts</div>
+      <div class="card">Grid discipline</div>
+      <div class="card">Color as signal</div>
+      <div class="card">Motion with purpose</div>
+    </div>
+
+    <div class="back" onclick="goBack()">← return to runtime</div>
+  </div>
+
+  <script>
+    // 1. Staggered Card Entrance
+    const cards = document.querySelectorAll('.card');
+    cards.forEach((card, index) => {
+      setTimeout(() => {
+        card.classList.add('reveal');
+      }, 400 + (index * 150));
+    });
+
+    // 2. Interactive Tilt (Mouse Parallax)
+    const target = document.getElementById('parallax-target');
+    document.addEventListener('mousemove', (e) => {
+      const x = (window.innerWidth / 2 - e.pageX) / 45;
+      const y = (window.innerHeight / 2 - e.pageY) / 45;
+      
+      target.style.transform = `rotateX(${y}deg) rotateY(${-x}deg)`;
+    });
+
+    // 3. Cinematic Exit
+    function goBack() {
+      document.body.classList.add("is-exiting");
+      setTimeout(() => {
+        window.location.href = "../index.html"; 
+      }, 750);
+    }
+  </script>
+</body>
+</html>

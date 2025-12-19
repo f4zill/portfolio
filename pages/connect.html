@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>FAZIL.EXE / CONNECT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #050505;
+      --fg: #eaeaea;
+      --muted: #666;
+      --accent: #ff9f1c;
+      --panel: rgba(255, 255, 255, 0.02);
+      --border: rgba(255, 255, 255, 0.08);
+      --input-bg: rgba(255, 255, 255, 0.03);
+      --transition-speed: 0.8s;
+      --curve: cubic-bezier(0.8, 0, 0.2, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body, html {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden; 
+      perspective: 2000px;
+    }
+
+    /* BACKGROUND OVERLAYS */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.4) 100%);
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeContrast amount='1.5'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      opacity: 0.05;
+      mix-blend-mode: overlay;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .code {
+      width: 95%;
+      max-width: 1100px;
+      min-height: 80vh;
+      background: var(--panel);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      padding: 2.5rem;
+      position: relative;
+      z-index: 2;
+      animation: sceneIn 1.2s var(--curve) forwards;
+      margin: 2rem 0;
+    }
+
+    @keyframes sceneIn {
+      from { opacity: 0; transform: scale(0.9) translateZ(-300px); }
+      to { opacity: 1; transform: scale(1) translateZ(0); }
+    }
+
+    /* --- SIDEBAR --- */
+    .sidebar {
+      border-right: 1px solid var(--border);
+      padding-right: 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .brand {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      letter-spacing: 0.3em;
+      font-weight: 700;
+      opacity: 0.8;
+    }
+
+    .social-links {
+      margin-top: 3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .social-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      transition: 0.3s;
+      display: block;
+    }
+
+    .social-links a:hover { color: var(--accent); transform: translateX(5px); }
+
+    .back {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--muted);
+      cursor: pointer;
+      letter-spacing: 0.1em;
+      transition: 0.3s;
+      padding: 1.5rem 0;
+      border-top: 1px solid var(--border);
+      margin-top: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .back:hover { color: var(--accent); }
+
+    /* --- CONTENT AREA --- */
+    .content {
+      padding-left: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .content h2 {
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(180deg, #fff 0%, #444 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .content p {
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+      font-size: 1rem;
+      max-width: 450px;
+      line-height: 1.5;
+    }
+
+    /* --- FORM STYLING --- */
+    .contact-form {
+      display: grid;
+      gap: 1.5rem;
+      max-width: 600px;
+    }
+
+    .input-group label {
+      display: block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    input, textarea {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      color: var(--fg);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      transition: all 0.3s;
+      -webkit-appearance: none; /* iOS fix */
+    }
+
+    input:focus, textarea:focus {
+      border-color: var(--accent);
+      background: rgba(255, 159, 28, 0.05);
+    }
+
+    textarea { min-height: 120px; resize: none; }
+
+    .send-btn {
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 1rem 2rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      width: fit-content;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      transition: all 0.4s var(--curve);
+    }
+
+    .send-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(255, 159, 28, 0.3);
+    }
+
+    /* --- RESPONSIVE FIXES --- */
+    @media (max-width: 900px) {
+      body { 
+        overflow-y: auto; 
+        align-items: flex-start; 
+        padding: 1rem;
+      }
+      
+      .code {
+        grid-template-columns: 1fr;
+        height: auto;
+        padding: 1.5rem;
+        width: 100%;
+      }
+
+      .sidebar {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding-right: 0;
+        padding-bottom: 1.5rem;
+        margin-bottom: 1.5rem;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: flex-start;
+      }
+
+      .brand { width: 100%; margin-bottom: 1rem; }
+
+      .social-links {
+        margin-top: 0;
+        flex-direction: row;
+        gap: 1rem;
+        width: 100%;
+      }
+
+      .back {
+        width: 100%;
+        border-top: 1px solid var(--border);
+        padding: 1rem 0;
+        margin-top: 1rem;
+      }
+
+      .content { padding-left: 0; }
+      
+      .send-btn {
+        width: 100%; /* Full width button on mobile for easier tapping */
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .social-links {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Two columns for links on very small screens */
+      }
+    }
+
+    /* EXIT TRANSITION */
+    #transition-overlay {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.6s var(--curve);
+    }
+
+    body.is-exiting #transition-overlay { opacity: 1; }
+  </style>
+</head>
+
+<body>
+
+  <div id="transition-overlay"></div>
+
+  <div class="code">
+    <div class="sidebar">
+      <div>
+        <div class="brand">FAZIL.EXE / CON</div>
+        <div class="social-links">
+          <a href="https://github.com/f4zill" target="_blank">GITHUB</a>
+          <a href="https://www.linkedin.com/in/fazilimaad523" target="_blank" rel="noopener noreferrer">LINKEDIN</a>
+        </div>
+      </div>
+      <div class="back" onclick="goBack()">
+        <span>←</span> RETURN TO RUNTIME
+      </div>
+    </div>
+
+    <div class="content">
+      <h2>Establish Connection.</h2>
+      <p>Initiate a direct signal for collaborations or inquiries.</p>
+
+      <form class="contact-form" onsubmit="handleSend(event)">
+        <div class="input-group">
+          <label>01 _ Identification</label>
+          <input type="text" placeholder="Your name" required>
+        </div>
+
+        <div class="input-group">
+          <label>02 _ Return Address</label>
+          <input type="email" placeholder="Email address" required>
+        </div>
+
+        <div class="input-group">
+          <label>03 _ Transmission Data</label>
+          <textarea placeholder="Message content..."></textarea>
+        </div>
+
+        <button type="submit" class="send-btn" id="sendBtn">Execute Send</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function handleSend(e) {
+      e.preventDefault();
+      const btn = document.getElementById('sendBtn');
+      btn.innerText = "SENDING...";
+      btn.style.opacity = "0.5";
+      btn.style.pointerEvents = "none";
+
+      setTimeout(() => {
+        btn.innerText = "SIGNAL SENT";
+        btn.style.background = "#fff";
+        btn.style.opacity = "1";
+        
+        setTimeout(() => {
+          btn.innerText = "Execute Send";
+          btn.style.background = "var(--accent)";
+          btn.style.pointerEvents = "all";
+          e.target.reset();
+        }, 2000);
+      }, 1500);
+    }
+
+    function goBack() {
+      document.body.classList.add("is-exiting");
+      setTimeout(() => {
+        window.location.href = "../index.html"; 
+      }, 600);
+    }
+  </script>
+</body>
+</html>
