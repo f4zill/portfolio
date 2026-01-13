@@ -22,7 +22,6 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* Allowed body to scroll on mobile if content overflows */
     body, html {
       background: var(--bg);
       color: var(--fg);
@@ -48,7 +47,7 @@
     .code {
       width: 95%;
       max-width: 1200px;
-      height: 85vh; /* Fixed height for desktop */
+      height: 85vh;
       background: var(--panel);
       backdrop-filter: blur(20px);
       border: 1px solid var(--border);
@@ -68,7 +67,6 @@
       to { opacity: 1; transform: scale(1) translateZ(0); }
     }
 
-    /* --- SIDEBAR --- */
     .sidebar {
       border-right: 1px solid var(--border);
       padding-right: 2rem;
@@ -137,7 +135,6 @@
       text-shadow: 0 0 8px var(--accent);
     }
 
-    /* --- CONTENT AREA --- */
     .content {
       padding-left: 1.5rem;
       display: flex;
@@ -220,17 +217,16 @@
       border: 1px solid var(--border);
     }
 
-    /* --- RESPONSIVE DESIGN --- */
     @media (max-width: 900px) {
       body {
         align-items: flex-start;
-        overflow-y: auto; /* Allow scrolling on small screens */
+        overflow-y: auto;
         padding: 1rem 0;
       }
 
       .code {
-        grid-template-columns: 1fr; /* Stack sidebar and content */
-        height: auto; /* Let it expand */
+        grid-template-columns: 1fr;
+        height: auto;
         padding: 1.5rem;
         width: 92%;
         overflow: visible;
@@ -270,7 +266,6 @@
       }
     }
 
-    /* Exit Overlay */
     #transition-overlay {
       position: fixed;
       inset: 0;
@@ -329,7 +324,12 @@
 
   <script>
     const projects = [
-      { title: "Gym Management System", description: "500+ users, Flask + MongoDB, fully Dockerized for scalability.", tech: "Flask • MongoDB • Docker" },
+      { 
+        title: "Gym Management System", 
+        description: "500+ users, Flask + MongoDB, fully Dockerized for scalability.", 
+        tech: "Flask • MongoDB • Docker",
+        link: "https://gms-wole.onrender.com"
+      },
       { title: "Pneumonia Detection", description: "92.5% accuracy using MobileNetV2 architecture for X-ray analysis.", tech: "TensorFlow • Keras • AI" },
       { title: "EcoFinds E-commerce", description: "Full-stack shopping platform with MySQL and containerized deployment.", tech: "Flask • MySQL • Docker" },
       { title: "AI-powered Notes", description: "React + Node + REST APIs, featuring real-time synchronization.", tech: "React • Node.js • APIs" },
@@ -343,12 +343,20 @@
 
     projects.forEach((proj, index) => {
       const card = document.createElement("div");
+      
       card.classList.add("project-card");
       card.innerHTML = `
         <h3>${proj.title}</h3>
         <p>${proj.description}</p>
         <code>${proj.tech}</code>
       `;
+      
+      if (proj.link) {
+        card.onclick = function() {
+          window.location.href = proj.link;
+        };
+      }
+      
       container.appendChild(card);
 
       setTimeout(() => {
