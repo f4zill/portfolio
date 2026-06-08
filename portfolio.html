@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fazil — Technical Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500&family=DM+Mono:ital,wght@0,300;0,400;0,500&display=swap" rel="stylesheet">
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js"
+  }
+}
+</script>
+<style>
+:root {
+  --bg: #0e0e0d;
+  --ink: #e8e4dc;
+  --ink-dim: #dadada;
+  --ink-faint: #2c2b29;
+  --bone: #d4cfc5;
+  --rust: #b85c38;
+  --sand: #c9b99a;
+  --line: rgba(232,228,220,0.08);
+  --line-strong: rgba(232,228,220,0.15);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--ink); font-family: 'DM Sans', sans-serif; overflow-x: hidden; cursor: none; }
+
+/* CURSOR */
+#cursor { position: fixed; width: 8px; height: 8px; background: var(--rust); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); box-shadow: 0 0 10px var(--rust); }
+#cursor-ring { position: fixed; width: 32px; height: 32px; border: 1px solid rgba(184,92,56,.4); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%, -50%); }
+
+/* NAV */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 3rem; background: rgba(14,14,13,.7); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+.nav-logo { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .25em; color: var(--ink-dim); text-decoration: none; text-transform: uppercase; }
+.nav-logo span { color: var(--rust); }
+.nav-links { display: flex; gap: 2.5rem; list-style: none; }
+.nav-links a { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .15em; color: var(--ink-dim); text-decoration: none; text-transform: uppercase; transition: color .3s; }
+.nav-links a:hover { color: var(--ink); }
+
+/* HERO */
+#hero { height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 3rem 4rem; position: relative; overflow: hidden; }
+#hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.45; }
+.hero-content { position: relative; z-index: 1; }
+.hero-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .2em; color: var(--rust); text-transform: uppercase; margin-bottom: 1rem; opacity: 0; animation: fadeUp .8s ease .3s forwards; }
+.hero-name { font-family: 'Bebas Neue', sans-serif; font-size: clamp(4rem, 12vw, 9rem); font-weight: 700; line-height: .9; letter-spacing: -.02em; color: var(--ink); opacity: 0; animation: fadeUp .8s ease .5s forwards; }
+.hero-bottom { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid var(--line); opacity: 0; animation: fadeUp .8s ease .7s forwards; }
+.hero-desc { font-size: 0.95rem; font-weight: 300; color: var(--ink-dim); max-width: 380px; line-height: 1.8; }
+.hero-meta { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: .12em; color: var(--ink-dim); text-align: right; text-transform: uppercase; line-height: 2; }
+.scroll-hint { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; z-index: 1; opacity: 0; animation: fadeIn 1s ease 1.5s forwards; }
+.scroll-hint span { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .2em; color: var(--ink-dim); text-transform: uppercase; }
+.scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--rust), transparent); animation: scrollPulse 2s ease-in-out infinite; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes scrollPulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+/* SECTIONS */
+.std-section { padding: 7rem 3rem; }
+.section-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .3em; color: var(--rust); text-transform: uppercase; margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem; }
+.section-label::before { content: ''; display: inline-block; width: 30px; height: 1px; background: var(--rust); }
+.section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 700; line-height: 1.1; letter-spacing: -.01em; margin-bottom: 3rem; }
+
+/* ABOUT */
+.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
+.about-text p { font-size: 0.95rem; line-height: 1.8; color: var(--ink-dim); font-weight: 300; margin-bottom: 1.5rem; }
+.about-text p strong { color: var(--ink); font-weight: 500; }
+.stack-grid { display: flex; flex-direction: column; gap: 0; }
+.stack-row { display: flex; align-items: baseline; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid var(--line); }
+.stack-cat { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: .15em; color: var(--rust); text-transform: uppercase; min-width: 120px; }
+.stack-items { color: var(--ink-dim); font-weight: 300; font-size: 0.88rem; }
+
+/* PROJECTS — 3D CAROUSEL */
+#projects-scroll { position: relative; }
+#projects-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; background: var(--bg); z-index: 10; }
+#projects-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
+
+.proj-hud-label { position: absolute; top: 50%; left: 3rem; transform: translateY(-50%); z-index: 100; pointer-events: none; }
+.proj-hud-label .section-label { margin-bottom: 0.5rem; }
+.proj-hud-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 3.5vw, 3.5rem); font-weight: 700; color: var(--ink); letter-spacing: -.01em; line-height: 1.1; margin-bottom: 0.8rem; text-shadow: 0 0 30px rgba(14,14,13,.9); }
+.proj-hud-type { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: .2em; color: var(--rust); text-transform: uppercase; margin-bottom: 1rem; }
+.proj-hud-stack { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: .1em; text-transform: uppercase; }
+.proj-hud-stack span { color: var(--ink-dim); border: 1px solid var(--line-strong); padding: 0.35rem 0.8rem; }
+
+.proj-counter { position: absolute; bottom: 3rem; right: 3rem; z-index: 100; font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: .15em; color: var(--ink-dim); text-shadow: 0 0 20px rgba(14,14,13,.8); }
+
+/* SKILLS */
+.skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0; border: 1px solid var(--line); background: var(--bg); }
+.skill-block { padding: 2.5rem; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); transition: background .3s; }
+.skill-block:hover { background: rgba(184,92,56,.03); }
+.skill-num { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; color: var(--ink-faint); line-height: 1; margin-bottom: 0.5rem; }
+.skill-name { font-size: 1rem; font-weight: 500; color: var(--ink); margin-bottom: 0.8rem; letter-spacing: -.01em; }
+.skill-items { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: .08em; color: var(--ink-dim); line-height: 2; text-transform: uppercase; }
+
+/* CONTACT */
+.contact-section { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; border-top: 1px solid var(--line); padding: 7rem 3rem; }
+.contact-big { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3rem, 8vw, 8rem); line-height: 0.9; letter-spacing: -.01em; color: var(--ink); }
+.contact-big .mark { color: var(--rust); }
+.contact-links { display: flex; flex-direction: column; gap: 0; }
+.contact-link { display: flex; align-items: baseline; justify-content: space-between; padding: 1.2rem 0; border-bottom: 1px solid var(--line); text-decoration: none; color: var(--ink); transition: color .3s; }
+.contact-link:hover { color: var(--rust); }
+.link-label { font-size: 1.05rem; font-weight: 400; }
+.link-handle { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: .1em; color: var(--ink-dim); }
+
+/* FOOTER */
+footer { border-top: 1px solid var(--line); padding: 2rem 3rem; display: flex; justify-content: space-between; align-items: center; font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: .12em; color: var(--ink-dim); text-transform: uppercase; }
+
+/* REVEAL */
+.reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.shown { opacity: 1; transform: none; }
+
+@media (max-width: 900px) {
+  .about-grid { grid-template-columns: 1fr; }
+  .contact-section { grid-template-columns: 1fr; }
+  .hero-name { font-size: clamp(2.5rem, 10vw, 4rem); }
+  nav { padding: 1rem 1.5rem; }
+  .std-section { padding: 4rem 1.5rem; }
+  .contact-section { padding: 4rem 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#"><span>F</span>azil</a>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#projects">Work</a>
+    <a href="#experience">Experience</a>
+    <a href="#skills">Skills</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO with particle splines -->
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-content">
+    <div class="hero-label">AI &amp; Data Science · VI Semester · Bengaluru</div>
+    <h1 class="hero-name">FA<span style="color:var(--rust)">Z</span>IL</h1>
+    <div class="hero-bottom">
+      <p class="hero-desc">Building at the intersection of machine intelligence and full-stack engineering — ML models, NLP pipelines, containerised web platforms, and AI-powered applications.</p>
+      <div class="hero-meta">
+        <span>PYTHON · ML · NLP</span>
+        <span>—</span>
+        <span>FLASK · REACT · DOCKER</span>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="std-section">
+  <div class="section-label reveal">About</div>
+  <h2 class="section-title reveal">Engineer.<br>Builder.<br>Thinker.</h2>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <p>VI semester B.Tech student in Artificial Intelligence &amp; Data Science at Reva University, Bengaluru. I build across the full spectrum — from CNN-powered medical imaging apps to containerised e-commerce platforms and NLP document-analysis pipelines.</p>
+      <p>Everything I build follows a single principle: <strong>the interface should disappear, leaving only the result.</strong></p>
+    </div>
+    <div class="stack-grid reveal">
+      <div class="stack-row"><span class="stack-cat">Languages</span><span class="stack-items">Python, JavaScript (ES6+), C, Java</span></div>
+      <div class="stack-row"><span class="stack-cat">AI / ML</span><span class="stack-items">TensorFlow, Keras, Scikit-learn, Pandas, NumPy</span></div>
+      <div class="stack-row"><span class="stack-cat">NLP</span><span class="stack-items">HuggingFace, BART, Flan-T5, spaCy</span></div>
+      <div class="stack-row"><span class="stack-cat">Backend</span><span class="stack-items">Flask, Node.js, REST APIs, Docker</span></div>
+      <div class="stack-row"><span class="stack-cat">Frontend</span><span class="stack-items">React, HTML5, CSS, Vite</span></div>
+      <div class="stack-row"><span class="stack-cat">Databases</span><span class="stack-items">MongoDB, MySQL, SQLAlchemy</span></div>
+      <div class="stack-row"><span class="stack-cat">DevOps</span><span class="stack-items">Docker Compose, Git, GitHub, Linux</span></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PROJECTS WITH 3D CAROUSEL -->
+<div id="projects-scroll">
+  <div id="projects-sticky">
+    <canvas id="projects-canvas"></canvas>
+    
+    <div class="proj-hud-label">
+      <div class="section-label"><span style="color:var(--rust)">// Project</span></div>
+      <h2 class="proj-hud-title" id="hud-title">DocAnalyser</h2>
+      <div class="proj-hud-type" id="hud-type">NLP · MINI PROJECT</div>
+      <div class="proj-hud-stack" id="hud-stack"></div>
+    </div>
+
+    <div class="proj-counter">
+      <span id="ctr-num">01</span> / <span id="ctr-total">06</span>
+    </div>
+  </div>
+</div>
+
+<!-- EDUCATION & EXPERIENCE -->
+<section id="experience" class="std-section" style="border-top: 1px solid var(--line);">
+  <div class="section-label reveal">Background</div>
+  <h2 class="section-title reveal">Education &amp;<br>Experience</h2>
+  <div class="about-grid">
+    <div class="reveal">
+      <div class="stack-row" style="border-top: 1px solid var(--line);">
+        <div>
+          <div style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:.15em;color:var(--rust);text-transform:uppercase;margin-bottom:0.4rem;">2023 — 2027</div>
+          <div style="font-size:1rem;font-weight:500;color:var(--ink);margin-bottom:0.3rem;">B.Tech — Artificial Intelligence &amp; Data Science</div>
+          <div style="font-size:0.85rem;color:var(--ink-dim);font-weight:300;">Reva University, Bengaluru · GPA 7.8 / 10.0</div>
+        </div>
+      </div>
+      <div class="stack-row">
+        <div>
+          <div style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:.15em;color:var(--rust);text-transform:uppercase;margin-bottom:0.4rem;">Aug 2025</div>
+          <div style="font-size:1rem;font-weight:500;color:var(--ink);margin-bottom:0.3rem;">Technology Virtual Job Simulation</div>
+          <div style="font-size:0.85rem;color:var(--ink-dim);font-weight:300;">Deloitte Australia (Forage) · Consulting &amp; Tech Dashboard Design</div>
+        </div>
+      </div>
+    </div>
+    <div class="reveal">
+      <div class="stack-row" style="border-top: 1px solid var(--line);">
+        <div>
+          <div style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:.15em;color:var(--rust);text-transform:uppercase;margin-bottom:0.4rem;">Sep 2024 — Present</div>
+          <div style="font-size:1rem;font-weight:500;color:var(--ink);margin-bottom:0.3rem;">Lead, FACE Art Club</div>
+          <div style="font-size:0.85rem;color:var(--ink-dim);font-weight:300;line-height:1.7;">Reva University · Managing a 15+ person team across 8+ university events. ₹50K+ budget, 30% efficiency improvement via task tracking, 90% volunteer retention.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills" class="std-section">
+  <div class="section-label reveal">Capabilities</div>
+  <h2 class="section-title reveal">Tech Stack</h2>
+  <div class="skills-grid">
+    <div class="skill-block reveal">
+      <div class="skill-num">01</div>
+      <div class="skill-name">Machine Learning</div>
+      <div class="skill-items">TensorFlow · Keras<br>Scikit-learn · Pandas · NumPy<br>MobileNetV2 · CNN</div>
+    </div>
+    <div class="skill-block reveal">
+      <div class="skill-num">02</div>
+      <div class="skill-name">NLP & LLMs</div>
+      <div class="skill-items">HuggingFace · BART<br>Flan-T5 · Transformers<br>Summarisation · Quiz Gen</div>
+    </div>
+    <div class="skill-block reveal">
+      <div class="skill-num">03</div>
+      <div class="skill-name">Backend</div>
+      <div class="skill-items">Flask · Node.js · REST APIs<br>MongoDB · MySQL<br>SQLAlchemy · Docker Compose</div>
+    </div>
+    <div class="skill-block reveal">
+      <div class="skill-num">04</div>
+      <div class="skill-name">Frontend & UI</div>
+      <div class="skill-items">React · Vite · HTML5<br>CSS · JavaScript (ES6+)<br>Jinja2 · Responsive Design</div>
+    </div>
+    <div class="skill-block reveal">
+      <div class="skill-num">05</div>
+      <div class="skill-name">DevOps & Cloud</div>
+      <div class="skill-items">Docker · Docker Compose<br>Git · GitHub · Linux<br>Render · Cloud Deployment</div>
+    </div>
+    <div class="skill-block reveal">
+      <div class="skill-num">06</div>
+      <div class="skill-name">Languages</div>
+      <div class="skill-items">Python · JavaScript<br>C · Java<br>SQL</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="reveal">
+    <div class="section-label">Contact</div>
+    <h2 class="contact-big">LET'S<br>BUILD<br>SOME<span class="mark">—</span><br>THING.</h2>
+  </div>
+  <div class="reveal">
+    <a class="contact-link" href="mailto:mfazilimaad523@email.com">
+      <span class="link-label">Email</span>
+      <span class="link-handle">mfazilimaad523@email.com</span>
+    </a>
+    <a class="contact-link" href="https://github.com/f4zill" target="_blank">
+      <span class="link-label">GitHub</span>
+      <span class="link-handle">github.com/f4zill</span>
+    </a>
+    <a class="contact-link" href="https://linkedin.com/in/fazil-imaad" target="_blank">
+      <span class="link-label">LinkedIn</span>
+      <span class="link-handle">www.linkedin.com/in/fazilimaad523</span>
+    </a>
+    <a class="contact-link" href="vault/O P Resume_f .pdf.pdf">
+      <span class="link-label">Resume</span>
+      <span class="link-handle">Download PDF</span>
+    </a>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 Fazil — All rights reserved</span>
+  <span>Designed & Engineered</span>
+</footer>
+
+<script type="module">
+import * as THREE from 'three';
+
+// ═════════════════════════════════════════════════════════════════════════
+// PROJECT DATA
+// ═════════════════════════════════════════════════════════════════════════
+const PROJECTS = [
+  {
+    title: 'CYRIX — AI Health Risk Prediction',
+    type: 'AI · HEALTHCARE · FULL STACK',
+    stack: ['Flask', 'MongoDB', 'Scikit-learn', 'Pandas'],
+    color: '#b85c38',
+    accent: '#d4935f',
+    url: 'https://github.com/f4zill'
+  },
+  {
+    title: 'Gym Management System',
+    type: 'FULL STACK · SAAS',
+    stack: ['Python', 'Flask', 'MongoDB', 'Docker'],
+    color: '#c9b99a',
+    accent: '#e8d4be',
+    url: 'https://github.com/f4zill/gym-management-system'
+  },
+  {
+    title: 'Chest X-ray Pneumonia Detection',
+    type: 'ML · MEDICAL IMAGING',
+    stack: ['TensorFlow', 'Keras', 'MobileNetV2', 'Flask'],
+    color: '#b85c38',
+    accent: '#d4935f',
+    url: 'https://github.com/f4zill/pneumonia-detection'
+  },
+  {
+    title: 'EcoFinds',
+    type: 'FULL STACK · E-COMMERCE',
+    stack: ['Flask', 'MySQL', 'SQLAlchemy', 'Docker'],
+    color: '#c9b99a',
+    accent: '#e8d4be',
+    url: 'https://github.com/f4zill/Ecofinds'
+  },
+  {
+    title: 'Faunex',
+    type: 'AI · WILDLIFE INTELLIGENCE',
+    stack: ['Flask', 'TensorFlow', 'Leaflet.js', 'JavaScript'],
+    color: '#b85c38',
+    accent: '#d4935f',
+    url: 'https://github.com/f4zill'
+  },
+  {
+    title: 'Doc Analyser NLP Pipeline',
+    type: 'NLP · MINI PROJECT',
+    stack: ['Python', 'HuggingFace', 'BART', 'Flan-T5'],
+    color: '#c9b99a',
+    accent: '#e8d4be',
+    url: 'https://github.com/f4zill'
+  }
+];
+const N = PROJECTS.length;
+
+// ═════════════════════════════════════════════════════════════════════════
+// HERO — CONSTELLATION PARTICLE FIELD
+// ═════════════════════════════════════════════════════════════════════════
+(function heroScene() {
+  const canvas = document.getElementById('hero-canvas');
+  if (!canvas) return;
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setClearColor(0x0e0e0d, 1);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 500);
+  camera.position.set(0, 0, 20);
+
+  function resize() {
+    const w = canvas.parentElement.clientWidth;
+    const h = canvas.parentElement.clientHeight;
+    renderer.setSize(w, h);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Seeded RNG
+  function seededRand(seed) {
+    let s = seed;
+    return () => { s = (s * 1664525 + 1013904223) & 0xffffffff; return (s >>> 0) / 0xffffffff; };
+  }
+
+  // ── CONSTELLATION STARS ──
+  const STAR_COUNT = 250;
+  const rng = seededRand(999);
+  
+  const starPositions = new Float32Array(STAR_COUNT * 3);
+  const starSizes = new Float32Array(STAR_COUNT);
+  const starColors = new Float32Array(STAR_COUNT * 3);
+
+  // Generate stars in a sphere
+  for (let i = 0; i < STAR_COUNT; i++) {
+    const phi = Math.acos(2 * rng() - 1);
+    const theta = rng() * Math.PI * 2;
+    const radius = 6 + rng() * 10;
+
+    starPositions[i * 3] = Math.sin(phi) * Math.cos(theta) * radius;
+    starPositions[i * 3 + 1] = Math.sin(phi) * Math.sin(theta) * radius;
+    starPositions[i * 3 + 2] = Math.cos(phi) * radius;
+
+    starSizes[i] = 0.6 + rng() * 2;
+
+    // Color palette: rust, sand, bone, dim ink
+    const colorChoice = Math.floor(rng() * 5);
+    if (colorChoice === 0) {
+      // Rust
+      starColors[i * 3] = 0.72;
+      starColors[i * 3 + 1] = 0.36;
+      starColors[i * 3 + 2] = 0.22;
+    } else if (colorChoice === 1) {
+      // Sand
+      starColors[i * 3] = 0.79;
+      starColors[i * 3 + 1] = 0.725;
+      starColors[i * 3 + 2] = 0.6;
+    } else if (colorChoice === 2) {
+      // Bone (brightest)
+      starColors[i * 3] = 0.91;
+      starColors[i * 3 + 1] = 0.89;
+      starColors[i * 3 + 2] = 0.86;
+    } else if (colorChoice === 3) {
+      // Dim ink
+      starColors[i * 3] = 0.42;
+      starColors[i * 3 + 1] = 0.405;
+      starColors[i * 3 + 2] = 0.36;
+    } else {
+      // Pale bone (very dim)
+      starColors[i * 3] = 0.6;
+      starColors[i * 3 + 1] = 0.58;
+      starColors[i * 3 + 2] = 0.55;
+    }
+  }
+
+  // Star geometry and shader
+  const starGeo = new THREE.BufferGeometry();
+  starGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+  starGeo.setAttribute('aSize', new THREE.BufferAttribute(starSizes, 1));
+  starGeo.setAttribute('aColor', new THREE.BufferAttribute(starColors, 3));
+
+  const starMat = new THREE.ShaderMaterial({
+    vertexShader: `
+      attribute float aSize;
+      attribute vec3 aColor;
+      varying vec3 vColor;
+      varying float vSize;
+      void main() {
+        vColor = aColor;
+        vSize = aSize;
+        vec4 mvPos = modelViewMatrix * vec4(position, 1.0);
+        gl_PointSize = aSize * (220.0 / -mvPos.z);
+        gl_Position = projectionMatrix * mvPos;
+      }
+    `,
+    fragmentShader: `
+      varying vec3 vColor;
+      varying float vSize;
+      void main() {
+        vec2 uv = gl_PointCoord - 0.5;
+        float dist = length(uv);
+        if (dist > 0.5) discard;
+        
+        // Soft star shape
+        float softEdge = 1.0 - smoothstep(0.1, 0.5, dist);
+        // Bright core
+        float core = exp(-dist * dist * 12.0) * 0.6;
+        
+        gl_FragColor = vec4(vColor, softEdge * 0.85 + core);
+      }
+    `,
+    transparent: true,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending
+  });
+
+  const stars = new THREE.Points(starGeo, starMat);
+  scene.add(stars);
+
+  // ── CONNECTING LINES ──
+  const linePositions = [];
+  const lineColors = [];
+
+  for (let i = 0; i < STAR_COUNT; i++) {
+    const x1 = starPositions[i * 3];
+    const y1 = starPositions[i * 3 + 1];
+    const z1 = starPositions[i * 3 + 2];
+
+    // Find nearest neighbors
+    let distances = [];
+    for (let j = i + 1; j < STAR_COUNT; j++) {
+      const x2 = starPositions[j * 3];
+      const y2 = starPositions[j * 3 + 1];
+      const z2 = starPositions[j * 3 + 2];
+      const d = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2 + (z2 - z1) ** 2);
+      distances.push({ idx: j, dist: d });
+    }
+    distances.sort((a, b) => a.dist - b.dist);
+
+    // Connect to 2-3 nearest neighbors
+    for (let k = 0; k < Math.min(3, distances.length); k++) {
+      if (distances[k].dist > 6) break;
+
+      const j = distances[k].idx;
+      const x2 = starPositions[j * 3];
+      const y2 = starPositions[j * 3 + 1];
+      const z2 = starPositions[j * 3 + 2];
+
+      linePositions.push(x1, y1, z1);
+      linePositions.push(x2, y2, z2);
+
+      // Line color: blend of star colors
+      const r1 = starColors[i * 3], g1 = starColors[i * 3 + 1], b1 = starColors[i * 3 + 2];
+      const r2 = starColors[j * 3], g2 = starColors[j * 3 + 1], b2 = starColors[j * 3 + 2];
+
+      const r = (r1 + r2) / 2 * 0.8;
+      const g = (g1 + g2) / 2 * 0.8;
+      const b = (b1 + b2) / 2 * 0.8;
+
+      lineColors.push(r, g, b);
+      lineColors.push(r, g, b);
+    }
+  }
+
+  const lineGeo = new THREE.BufferGeometry();
+  lineGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(linePositions), 3));
+  lineGeo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(lineColors), 3));
+
+  const lineMat = new THREE.LineBasicMaterial({
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.2,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    linewidth: 1
+  });
+
+  const lines = new THREE.LineSegments(lineGeo, lineMat);
+  scene.add(lines);
+
+  let mx = 0, my = 0, tcx = 0, tcy = 0;
+  document.addEventListener('mousemove', e => {
+    mx = (e.clientX / innerWidth - 0.5) * 2;
+    my = (e.clientY / innerHeight - 0.5) * 2;
+  });
+
+  let prev = 0;
+
+  function frame(now) {
+    requestAnimationFrame(frame);
+    const dt = Math.min((now - prev) / 16.67, 3);
+    prev = now;
+
+    // Slow rotation
+    const rotSpeed = 0.00008;
+    stars.rotation.y += rotSpeed * dt;
+    lines.rotation.y += rotSpeed * dt;
+
+    // Gentle bob
+    const bobAmount = Math.sin(now * 0.0004) * 1.2;
+    stars.position.y = bobAmount;
+    lines.position.y = bobAmount;
+
+    // Camera follows mouse
+    tcx += (mx * 2.5 - tcx) * 0.015 * dt;
+    tcy += (-my * 1.5 - tcy) * 0.015 * dt;
+    
+    camera.position.x = tcx;
+    camera.position.y = tcy;
+    camera.position.z = 20 + Math.sin(now * 0.0003) * 1;
+    camera.lookAt(0, 0, 0);
+
+    renderer.render(scene, camera);
+  }
+
+  frame(0);
+})();
+
+// ═════════════════════════════════════════════════════════════════════════
+// PROJECTS 3D CAROUSEL WITH CONSTELLATION PARTICLES
+// ═════════════════════════════════════════════════════════════════════════
+(function projectsScene() {
+  const scroll = document.getElementById('projects-scroll');
+  const sticky = document.getElementById('projects-sticky');
+  const canvas = document.getElementById('projects-canvas');
+  const hudType = document.getElementById('hud-type');
+  const hudTitle = document.getElementById('hud-title');
+  const hudStack = document.getElementById('hud-stack');
+  const ctrNum = document.getElementById('ctr-num');
+  const ctrTotal = document.getElementById('ctr-total');
+
+  scroll.style.height = (N + 1) * 100 + 'vh';
+  ctrTotal.textContent = String(N).padStart(2, '0');
+
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setClearColor(0x0e0e0d, 1);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 200);
+  camera.position.set(0, 0, 14);
+
+  function resize() {
+    const w = sticky.clientWidth;
+    const h = sticky.clientHeight;
+    renderer.setSize(w, h);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // ── CONSTELLATION PARTICLES ──
+  // Create a sparse field of stars with connecting lines
+  function seededRand(seed) {
+    let s = seed;
+    return () => { s = (s * 1664525 + 1013904223) & 0xffffffff; return (s >>> 0) / 0xffffffff; };
+  }
+
+  const STAR_COUNT = 280;
+  const rng = seededRand(777);
+  
+  const starPositions = new Float32Array(STAR_COUNT * 3);
+  const starSizes = new Float32Array(STAR_COUNT);
+  const starColors = new Float32Array(STAR_COUNT * 3);
+
+  // Generate random star positions in a sphere
+  for (let i = 0; i < STAR_COUNT; i++) {
+    const phi = Math.acos(2 * rng() - 1);
+    const theta = rng() * Math.PI * 2;
+    const radius = 8 + rng() * 4;
+
+    starPositions[i * 3] = Math.sin(phi) * Math.cos(theta) * radius;
+    starPositions[i * 3 + 1] = Math.sin(phi) * Math.sin(theta) * radius;
+    starPositions[i * 3 + 2] = Math.cos(phi) * radius;
+
+    starSizes[i] = 0.8 + rng() * 1.8;
+
+    // Color variation: mix of rust, sand, and bone
+    const colorChoice = Math.floor(rng() * 4);
+    if (colorChoice === 0) {
+      // Rust
+      starColors[i * 3] = 0.72;
+      starColors[i * 3 + 1] = 0.36;
+      starColors[i * 3 + 2] = 0.22;
+    } else if (colorChoice === 1) {
+      // Sand
+      starColors[i * 3] = 0.79;
+      starColors[i * 3 + 1] = 0.725;
+      starColors[i * 3 + 2] = 0.6;
+    } else if (colorChoice === 2) {
+      // Bone
+      starColors[i * 3] = 0.91;
+      starColors[i * 3 + 1] = 0.89;
+      starColors[i * 3 + 2] = 0.86;
+    } else {
+      // Dim ink
+      starColors[i * 3] = 0.42;
+      starColors[i * 3 + 1] = 0.405;
+      starColors[i * 3 + 2] = 0.36;
+    }
+  }
+
+  // Create star geometry and material
+  const starGeo = new THREE.BufferGeometry();
+  starGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+  starGeo.setAttribute('aSize', new THREE.BufferAttribute(starSizes, 1));
+  starGeo.setAttribute('aColor', new THREE.BufferAttribute(starColors, 3));
+
+  const starMat = new THREE.ShaderMaterial({
+    vertexShader: `
+      attribute float aSize;
+      attribute vec3 aColor;
+      varying vec3 vColor;
+      void main() {
+        vColor = aColor;
+        vec4 mvPos = modelViewMatrix * vec4(position, 1.0);
+        gl_PointSize = aSize * (200.0 / -mvPos.z);
+        gl_Position = projectionMatrix * mvPos;
+      }
+    `,
+    fragmentShader: `
+      varying vec3 vColor;
+      void main() {
+        vec2 uv = gl_PointCoord - 0.5;
+        float dist = length(uv);
+        if (dist > 0.5) discard;
+        float softEdge = 1.0 - smoothstep(0.2, 0.5, dist);
+        float glow = exp(-dist * dist * 8.0) * 0.3;
+        gl_FragColor = vec4(vColor, (softEdge * 0.35 + glow) * 0.35);
+      }
+    `,
+    transparent: true,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending
+  });
+
+  const stars = new THREE.Points(starGeo, starMat);
+  scene.add(stars);
+
+  // ── CONSTELLATION LINES ──
+  // Connect nearby stars to form constellations
+  const linePositions = [];
+  const lineColors = [];
+
+  for (let i = 0; i < STAR_COUNT; i++) {
+    const x1 = starPositions[i * 3];
+    const y1 = starPositions[i * 3 + 1];
+    const z1 = starPositions[i * 3 + 2];
+
+    // Find 3-5 nearest neighbors
+    let distances = [];
+    for (let j = 0; j < STAR_COUNT; j++) {
+      if (i === j) continue;
+      const x2 = starPositions[j * 3];
+      const y2 = starPositions[j * 3 + 1];
+      const z2 = starPositions[j * 3 + 2];
+      const d = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2 + (z2 - z1) ** 2);
+      distances.push({ idx: j, dist: d });
+    }
+    distances.sort((a, b) => a.dist - b.dist);
+
+    // Connect to nearest neighbors (within distance threshold)
+    for (let k = 0; k < Math.min(4, distances.length); k++) {
+      if (distances[k].dist > 5) break; // Only connect nearby stars
+
+      const j = distances[k].idx;
+      const x2 = starPositions[j * 3];
+      const y2 = starPositions[j * 3 + 1];
+      const z2 = starPositions[j * 3 + 2];
+
+      linePositions.push(x1, y1, z1);
+      linePositions.push(x2, y2, z2);
+
+      // Line color: blend of the two star colors
+      const r1 = starColors[i * 3], g1 = starColors[i * 3 + 1], b1 = starColors[i * 3 + 2];
+      const r2 = starColors[j * 3], g2 = starColors[j * 3 + 1], b2 = starColors[j * 3 + 2];
+
+      lineColors.push((r1 + r2) / 2, (g1 + g2) / 2, (b1 + b2) / 2);
+      lineColors.push((r1 + r2) / 2, (g1 + g2) / 2, (b1 + b2) / 2);
+    }
+  }
+
+  const lineGeo = new THREE.BufferGeometry();
+  lineGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(linePositions), 3));
+  lineGeo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(lineColors), 3));
+
+  const lineMat = new THREE.LineBasicMaterial({
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.08,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false
+  });
+
+  const lines = new THREE.LineSegments(lineGeo, lineMat);
+  scene.add(lines);
+
+  // ── PROJECT CARDS ON CYLINDER ──
+  const CARD_RADIUS = 5.2;
+  const CARD_W = 4.5;
+  const CARD_H = 2.8;
+
+  function makeCardTexture(proj) {
+    const cw = 450;
+    const ch = 280;
+    const cv = document.createElement('canvas');
+    cv.width = cw;
+    cv.height = ch;
+    const ctx = cv.getContext('2d');
+
+    ctx.fillStyle = '#0e0e0d';
+    ctx.fillRect(0, 0, cw, ch);
+
+    // Top accent
+    const grad = ctx.createLinearGradient(0, 0, cw, 0);
+    grad.addColorStop(0, proj.color + 'aa');
+    grad.addColorStop(1, 'transparent');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, cw, 3);
+
+    // Border
+    ctx.strokeStyle = proj.color + '44';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0.5, 0.5, cw - 1, ch - 1);
+
+    // Type
+    ctx.font = 'bold 11px monospace';
+    ctx.fillStyle = proj.color + 'cc';
+    ctx.fillText(proj.type.toUpperCase(), 24, 35);
+
+    // Title
+    ctx.font = 'bold 22px monospace';
+    ctx.fillStyle = '#e8e4dc';
+    const words = proj.title.split(' ');
+    let line = '', y = 70;
+    for (const w of words) {
+      const test = line + w + ' ';
+      if (ctx.measureText(test).width > cw - 48 && line) {
+        ctx.fillText(line.trim(), 24, y);
+        line = w + ' ';
+        y += 28;
+      } else {
+        line = test;
+      }
+    }
+    ctx.fillText(line.trim(), 24, y);
+
+    // Stack pills
+    let px = 24;
+    const py = y + 42;
+    ctx.font = '10px monospace';
+    for (const tag of proj.stack) {
+      const tw = ctx.measureText(tag).width + 16;
+      ctx.strokeStyle = proj.color + '55';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(px, py - 14, tw, 18);
+      ctx.fillStyle = proj.color + 'aa';
+      ctx.fillText(tag, px + 8, py);
+      px += tw + 8;
+      if (px > cw - 60) break;
+    }
+
+    // Grid
+    ctx.strokeStyle = 'rgba(184,92,56,0.04)';
+    ctx.lineWidth = 0.5;
+    for (let gx = 0; gx < cw; gx += 35) {
+      ctx.beginPath();
+      ctx.moveTo(gx, 0);
+      ctx.lineTo(gx, ch);
+      ctx.stroke();
+    }
+
+    return new THREE.CanvasTexture(cv);
+  }
+
+  const cards = PROJECTS.map((proj, idx) => {
+    const geo = new THREE.PlaneGeometry(CARD_W, CARD_H);
+    const tex = makeCardTexture(proj);
+    const mat = new THREE.MeshBasicMaterial({
+      map: tex,
+      transparent: true,
+      opacity: 1,
+      side: THREE.FrontSide
+    });
+    const mesh = new THREE.Mesh(geo, mat);
+
+    const edgeGeo = new THREE.PlaneGeometry(CARD_W + 0.1, CARD_H + 0.1);
+    const edgeMat = new THREE.MeshBasicMaterial({
+      color: new THREE.Color(proj.color),
+      transparent: true,
+      opacity: 0,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      side: THREE.FrontSide
+    });
+    const edgeMesh = new THREE.Mesh(edgeGeo, edgeMat);
+    edgeMesh.position.z = -0.025;
+
+    const group = new THREE.Group();
+    group.add(mesh);
+    group.add(edgeMesh);
+    group._edgeMat = edgeMat;
+    group._projIdx = idx;
+    group._color = new THREE.Color(proj.color);
+    scene.add(group);
+    return group;
+  });
+
+  // Scroll state
+  let rawProgress = 0;
+  let smoothIndex = 0;
+  let targetIndex = 0;
+  let animIndex = 0;
+
+  function updateScrollState() {
+    const rect = scroll.getBoundingClientRect();
+    const total = scroll.offsetHeight - window.innerHeight;
+    const scrolled = -rect.top;
+    rawProgress = Math.max(0, Math.min(1, scrolled / total));
+    targetIndex = rawProgress * (N - 1);
+  }
+
+  function updateHUD(idx) {
+    const i = Math.round(idx);
+    if (i === animIndex) return;
+    animIndex = i;
+    const proj = PROJECTS[Math.min(i, N - 1)];
+    hudType.style.opacity = '0';
+    hudTitle.style.opacity = '0';
+    hudStack.style.opacity = '0';
+    ctrNum.style.opacity = '0';
+
+    setTimeout(() => {
+      hudType.textContent = proj.type;
+      hudTitle.textContent = proj.title;
+      hudStack.innerHTML = proj.stack.map(s => `<span>${s}</span>`).join('');
+      ctrNum.textContent = String(i + 1).padStart(2, '0');
+
+      hudType.style.transition = 'opacity 0.3s';
+      hudTitle.style.transition = 'opacity 0.3s';
+      hudStack.style.transition = 'opacity 0.3s';
+      ctrNum.style.transition = 'opacity 0.3s';
+
+      hudType.style.opacity = '1';
+      hudTitle.style.opacity = '1';
+      hudStack.style.opacity = '1';
+      ctrNum.style.opacity = '1';
+    }, 150);
+  }
+
+  updateHUD(0);
+  window.addEventListener('scroll', updateScrollState, { passive: true });
+
+  let prev = 0;
+  let constellationRotation = 0;
+
+  function frame(now) {
+    requestAnimationFrame(frame);
+    const dt = Math.min((now - prev) / 16.67, 3);
+    prev = now;
+
+    updateScrollState();
+    smoothIndex += (targetIndex - smoothIndex) * 0.08;
+    updateHUD(smoothIndex);
+
+    // Slowly rotate constellation
+    constellationRotation += 0.0003 * dt;
+    stars.rotation.y = constellationRotation;
+    lines.rotation.y = constellationRotation;
+
+    // Subtle bobbing
+    const bobAmount = Math.sin(now * 0.0005) * 1.5;
+    stars.position.y = bobAmount;
+    lines.position.y = bobAmount;
+
+    cards.forEach((card, idx) => {
+      const angle = ((idx - smoothIndex) * (Math.PI * 2 / N)) + Math.PI;
+      const x = CARD_RADIUS * Math.cos(angle);
+      const z = CARD_RADIUS * Math.sin(angle);
+      card.position.set(x, 0, z);
+      card.rotation.y = -angle;
+
+      const distToFront = Math.abs(Math.sin((idx - smoothIndex) * Math.PI / N));
+      const opacity = Math.max(0.4, 1 - distToFront * 0.8);
+      const scale = 0.8 + 0.2 * (1 - distToFront);
+
+      card.scale.set(scale, scale, 1);
+      card.children[0].material.opacity = opacity;
+      card._edgeMat.opacity = (1 - distToFront) * 0.2;
+    });
+
+    renderer.render(scene, camera);
+  }
+
+  frame(0);
+})();
+
+// ═════════════════════════════════════════════════════════════════════════
+// CURSOR
+// ═════════════════════════════════════════════════════════════════════════
+const cur = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX;
+  my = e.clientY;
+  cur.style.left = mx + 'px';
+  cur.style.top = my + 'px';
+});
+
+(function animRing() {
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) * 0.12;
+  ring.style.left = rx + 'px';
+  ring.style.top = ry + 'px';
+  requestAnimationFrame(animRing);
+})();
+
+document.querySelectorAll('a, .skill-block').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cur.style.width = '4px';
+    cur.style.height = '4px';
+    ring.style.width = '50px';
+    ring.style.height = '50px';
+  });
+  el.addEventListener('mouseleave', () => {
+    cur.style.width = '8px';
+    cur.style.height = '8px';
+    ring.style.width = '32px';
+    ring.style.height = '32px';
+  });
+});
+
+// ═════════════════════════════════════════════════════════════════════════
+// SCROLL REVEAL
+// ═════════════════════════════════════════════════════════════════════════
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('shown');
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+</script>
+
+</body>
+</html>
